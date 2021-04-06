@@ -2,16 +2,31 @@ import fetch from 'node-fetch';
 import { Logger } from './Logger.js';
 
 export class ApiTestGroup {
-  constructor(method, url, body) {
+  constructor(method, url, body = {}) {
     this.method = method;
     this.url = url;
     this.body = body;
     this.testGroupName = `${method} ${url}`;
-    this.logger = new Logger();
+    this.logger = new Logger(this.testGroupName);
   }
 
   fetchResponse = () => {
-    try {
+    if (JSON.stringify(this.body) === '{}') {
+      return fetch(this.url, {
+        method: this.method
+      })
+        .then((response) => {
+          this.response = response;
+          return response.json()
+        })
+        .then((json) => {
+          this.responseBody = json;
+          this.logger.logStart();
+        })
+        .catch(error => {
+          throw (error);
+        });
+    } else {
       return fetch(this.url, {
         method: this.method,
         body: JSON.stringify(this.body),
@@ -25,11 +40,11 @@ export class ApiTestGroup {
         })
         .then((json) => {
           this.responseBody = json;
-          this.logger.logStart(this.testGroupName);
+          this.logger.logStart();
+        })
+        .catch(error => {
+          throw (error);
         });
-    } catch (err) {
-      console.log('ERROR');
-      return Promise.reject();
     }
   }
 

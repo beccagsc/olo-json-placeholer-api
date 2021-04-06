@@ -1,8 +1,12 @@
 export class Logger {
+  constructor(name) {
+    this.testGroupName = name;
+  }
 
   logStart = (testGroupName) => {
     console.log();
-    console.log(`Test group ${testGroupName}`);
+    console.log(`Test group ${this.testGroupName}`);
+    console.log('==============================================');
   }
 
   logFail = (testCaseName, actualValue) => {
@@ -13,4 +17,8 @@ export class Logger {
     console.log(`PASS: ${testCaseName}`)
   }
 
+  logGroupError = (error) => {
+    console.log();
+    console.log(`***** Cannot run test group ${this.testGroupName}. Error:  ${error.message}`);
+  }
 }

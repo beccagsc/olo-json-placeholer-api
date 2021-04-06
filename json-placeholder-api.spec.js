@@ -13,6 +13,25 @@ const commenterName = "Bob Smith";
 const commenterEmail = "bob@bobs.biz"
 const comment = "This is the most profound thing that I have ever read."
 
+// GET https://jsonplaceholder.typicode.com/posts
+const testGroupGETPosts = new ApiTestGroup('GET', postsUrl);
+testGroupGETPosts.fetchResponse()
+.then(() => {
+  testGroupGETPosts.testCase('status', 200);
+})
+.catch(error => {
+  testGroupGETPosts.logger.logGroupError(error);
+});
+
+// DELETE https://jsonplaceholder.typicode.com/posts/{postId}
+const testGroupDELETEPost = new ApiTestGroup('DELETE', `${postsUrl}/${postId}`);
+testGroupDELETEPost.fetchResponse()
+.then(() => {
+  testGroupDELETEPost.testCase('status', 200);
+})
+.catch(error => {
+  testGroupDELETEPost.logger.logGroupError(error);
+});
 
 // POST https://jsonplaceholder.typicode.com/posts
 const bodyOfPOST = {
@@ -26,6 +45,9 @@ testGroupPOSTPost.fetchResponse().then(() => {
   testGroupPOSTPost.testCase('body.userId', postUserId);
   testGroupPOSTPost.testCase('body.title', postTitle);
   testGroupPOSTPost.testCase('body.description', postBody);
+})
+.catch(error => {
+  testGroupGETPosts.logger.logGroupError(error);
 });
 
 // PUT https://jsonplaceholder.typicode.com/posts/{postId}
@@ -41,6 +63,9 @@ testGroupPUTPost.fetchResponse().then(() => {
   testGroupPUTPost.testCase('body.userId', postUpdatedUserId);
   testGroupPUTPost.testCase('body.title', postUpdatedTitle);
   testGroupPUTPost.testCase('body.description', postUpdatedBody);
+})
+.catch(error => {
+  testGroupGETPosts.logger.logGroupError(error);
 });
 
 // POST https://jsonplaceholder.typicode.com/posts/{postId}/comments
@@ -56,4 +81,7 @@ testGroupPOSTComments.fetchResponse().then(() => {
   testGroupPOSTComments.testCase('body.name', commenterName);
   testGroupPOSTComments.testCase('body.email', commenterEmail);
   testGroupPOSTComments.testCase('body.body', comment);
+})
+.catch(error => {
+  testGroupGETPosts.logger.logGroupError(error);
 });
